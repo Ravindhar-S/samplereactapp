@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@aws-amplify/backend-output-schemas": "^1.8.0",
+    "@aws-amplify/data-construct": "^1.17.3",
     "aws-amplify": "^6.18.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
