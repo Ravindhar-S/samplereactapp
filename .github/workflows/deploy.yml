@@ -21,10 +21,10 @@ jobs:
         node-version: 20
         cache: 'npm'
 
-    # 3. Clean install dependencies and build the static assets (outputs to dist/)
+    # 3. Install dependencies and compile Vite build
     - name: Install and Build
       run: |
-        npm ci
+        npm install --legacy-peer-deps
         npm run build
 
     # 4. Authenticate securely with AWS using your GitHub Secrets
