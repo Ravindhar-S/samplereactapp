@@ -1,0 +1,41 @@
+name: Deploy Vite to S3
+
+on:
+  push:
+    branches:
+      - main # ⚠️ Change to 'master' if your main GitHub branch is named master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Pull down the source code from your GitHub repository
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # 2. Setup the Node.js environment
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    # 3. Clean install dependencies and build the static assets (outputs to dist/)
+    - name: Install and Build
+      run: |
+        npm ci
+        npm run build
+
+    # 4. Authenticate securely with AWS using your GitHub Secrets
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2 # ⚠️ Replace with your S3 bucket's AWS region (e.g. us-west-2)
+
+    # 5. Sync the compiled 'dist/' folder directly to your S3 bucket
+    - name: Deploy static site to S3 bucket
+      run: |
+        aws s3 sync dist/ s3://aws-sample-static-app --delete 
